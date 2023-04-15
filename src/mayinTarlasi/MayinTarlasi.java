@@ -32,7 +32,7 @@ public class MayinTarlasi implements MouseListener {
 		
 		generatedMine();
 		updateCount();
-		//print();
+		// print();
 		
 	}
 	
@@ -88,6 +88,20 @@ public class MayinTarlasi implements MouseListener {
 		}
 	}
 	
+	public void open(int r, int c) {
+		if(r<0 || r>= board.length || c < 0 || c >= board.length || board[r][c].getText().length() > 0 || board[r][c].isEnabled() == false) {
+			return;
+		}else if(board[r][c].getCount() != 0) {
+			board[r][c].setText(board[r][c].getCount()+"");
+			board[r][c].setEnabled(false);
+		}else {
+			board[r][c].setEnabled(false);
+			open(r-1,c);
+			open(r+1,c);
+			open(r,c-1);
+			open(r,c+1);
+		}
+	}
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
@@ -98,9 +112,11 @@ public class MayinTarlasi implements MouseListener {
 		if(e.getButton() == 1) {
 			System.out.println("sol tık");
 			if(b.isMine() == true) {
+				print();
 				JOptionPane.showMessageDialog(frame, "Game Over!");
+
 			}else {
-				
+				open(b.getRow(), b.getCol());
 			}
 			
 		}else if(e.getButton() == 3) {
