@@ -11,8 +11,10 @@ import javax.swing.JOptionPane;
 public class MayinTarlasi implements MouseListener {
 	JFrame frame;
 	Btn[][] board = new Btn[10][10];
+	int openButton;
 	
 	public MayinTarlasi(){
+		openButton=0;
 		frame = new JFrame("Mayın Tarlası");
 		
 		frame.setSize(800,800);
@@ -33,6 +35,7 @@ public class MayinTarlasi implements MouseListener {
 		generatedMine();
 		updateCount();
 		// print();
+		printMine();
 		
 	}
 	
@@ -59,6 +62,17 @@ public class MayinTarlasi implements MouseListener {
 					board[row][col].setIcon(new ImageIcon("C:\\Development\\MayinTarlasi\\src\\mayinTarlasi\\mine.png"));
 				}else {
 					board[row][col].setText(board[row][col].getCount()+"");
+					board[row][col].setEnabled(false);
+				}
+			}
+		}
+	}
+	
+	public void printMine() {
+		for(int row=0; row < board.length; row++) {
+			for(int col = 0; col < board[0].length; col++) {
+				if(board[row][col].isMine()) {
+					board[row][col].setIcon(new ImageIcon("C:\\Development\\MayinTarlasi\\src\\mayinTarlasi\\mine.png"));
 				}
 			}
 		}
@@ -74,6 +88,8 @@ public class MayinTarlasi implements MouseListener {
 			}
 		}
 	}
+	
+	
 	
 	public void counting(int row, int col) {
 		for(int i = row - 1; i <= row+1; i++) {
@@ -94,7 +110,9 @@ public class MayinTarlasi implements MouseListener {
 		}else if(board[r][c].getCount() != 0) {
 			board[r][c].setText(board[r][c].getCount()+"");
 			board[r][c].setEnabled(false);
+			openButton++;
 		}else {
+			openButton++;
 			board[r][c].setEnabled(false);
 			open(r-1,c);
 			open(r+1,c);
@@ -114,9 +132,12 @@ public class MayinTarlasi implements MouseListener {
 			if(b.isMine() == true) {
 				print();
 				JOptionPane.showMessageDialog(frame, "Game Over!");
-
-			}else {
+			}else {				
 				open(b.getRow(), b.getCol());
+				if(openButton == (board.length * board[0].length) - 10) {
+					JOptionPane.showMessageDialog(frame, "Tebrikler Kazandınız!!!");
+					print();
+				}
 			}
 			
 		}else if(e.getButton() == 3) {
